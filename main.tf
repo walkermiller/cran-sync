@@ -177,8 +177,6 @@ resource "aws_api_gateway_integration_response" "s3_first_integration_response" 
     rest_api_id = aws_api_gateway_rest_api.api_gw.id
     resource_id = aws_api_gateway_resource.firstResource.id
     status_code = aws_api_gateway_method_response.first_method_response.status_code
-  #
-    #response_templates = {"text/html" = "$input.path('$')"}
     response_parameters={"method.response.header.Content-Type" = "integration.response.header.Content-Type"}
     http_method = aws_api_gateway_method_response.first_method_response.http_method
 }
@@ -191,7 +189,6 @@ resource "aws_api_gateway_integration_response" "s3_second_integration_response"
     rest_api_id = aws_api_gateway_rest_api.api_gw.id
     resource_id = aws_api_gateway_resource.secondResource.id
     status_code = aws_api_gateway_method_response.second_method_response.status_code
-    # response_templates = {"text/html" = "$input.path('$')"}
     response_parameters={"method.response.header.Content-Type" = "integration.response.header.Content-Type"}
     http_method = aws_api_gateway_method_response.second_method_response.http_method
 }
@@ -204,8 +201,6 @@ resource "aws_api_gateway_integration_response" "s3_third_integration_response" 
     rest_api_id = aws_api_gateway_rest_api.api_gw.id
     resource_id = aws_api_gateway_resource.thirdResource.id
     status_code = aws_api_gateway_method_response.third_method_response.status_code
-  #
-   # response_templates = {"text/html" = "$input.path('$')"}
     response_parameters={"method.response.header.Content-Type" = "integration.response.header.Content-Type"}
     http_method = aws_api_gateway_method_response.third_method_response.http_method
 }
@@ -215,13 +210,6 @@ resource "aws_api_gateway_deployment" "cran-deploy" {
   rest_api_id = aws_api_gateway_rest_api.api_gw.id
 
   triggers = {
-    # NOTE: The configuration below will satisfy ordering considerations,
-    #       but not pick up all future REST API changes. More advanced patterns
-    #       are possible, such as using the filesha1() function against the
-    #       Terraform configuration file(s) or removing the .id references to
-    #       calculate a hash against whole resources. Be aware that using whole
-    #       resources will show a difference after the initial implementation.
-    #       It will stabilize to only change when resources change afterwards.
     redeployment = sha1(jsonencode([
       aws_api_gateway_resource.firstResource,
       aws_api_gateway_resource.secondResource,
